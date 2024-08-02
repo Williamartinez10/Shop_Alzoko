@@ -1,4 +1,5 @@
 <?php
+
 require 'config/config.php';
 require 'config/database.php';
 $db = new Database ();
@@ -33,15 +34,15 @@ if(!file_exists($rutaImg)){
 $imagenes= array();
 if(file_exists($dir_images))
 {
-$dir =dir($dir_images);
-while(($archivo = $dir->read()) != false){
-  if($archivo != 'principal.jpg' && (strpos($archivo,'jpg') || strpos($archivo, 'jpeg'))) {
-      $imagenes[]= $dir_images . $archivo;
+$dir = dir($dir_images);
+
+while (($archivo = $dir->read()) != false){
+  if ($archivo != 'principal.jpg' && (strpos($archivo, 'jpg') || strpos($archivo, 'jpeg'))) {
+      $imagenes[] = $dir_images . $archivo;
   }
 }
 $dir->close();
-}}
-  
+} 
 } else{
     echo 'Error al procesar la petición';
   exit;
@@ -92,7 +93,9 @@ $dir->close();
             <a href="#" class="nav-link ">CataExpertos en:</a>
           </li>
         </ul>
-        <a href="Carrito.php" class="btn btn-primary">Carrito</a>
+        <a href="checkout.php" class="btn btn-primary">Carrito
+          <span id="num_cart" classs= "badge bg-secondary"> <?php echo $num_cart; ?></span>
+        </a>
       </div>
     </div>
   </div>
@@ -144,9 +147,9 @@ $dir->close();
           </p>
           <div class ="g-grid gap-3 col-10 mx-auto">
             <button class ="btn btn-outline-primary" type="button"> Comprar ahora </button>
-            <button class ="btn btn-outline-primary" type="button"> Agregar al Carrito </button>
+            <button class ="btn btn-outline-primary" type="button" onclick="addProducto(<?php echo $id; ?>, 
+            '<?php echo $token_tmp; ?>') "> Agregar al Carrito </button>
             </div>
-
 
         </div>
       </div>
@@ -160,5 +163,26 @@ integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqrupt
 crossorigin="anonymous">
 </script>
 
+
+<script> 
+  function addProducto(id, token){
+    let url= 'clases/carrito.php'
+    let formData = new FormData()
+    formData.append('id', id) 
+    formData.append('token', token)
+
+    fetch(url, {
+      method: 'POST',
+      body: formData,
+      mode: 'cors'
+    }).then(response => response.json())
+    .then(data => {
+      if(data.ok){
+        let elemento = document.getElementById("num_cart")
+        elemento.innerHTML = data.numero
+      }
+    })
+  }
+</script>
 </body>
 </html>
