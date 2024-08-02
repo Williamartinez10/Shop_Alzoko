@@ -212,7 +212,7 @@ eliminaModal.addEventListener('show.bs.modal', function(event){
 
 
   function eliminar(){
-
+ 
     let botonElimina = document.getElementById('btn-elimina')
     let id = botonElimina.value
 
